@@ -530,7 +530,13 @@ static int get_version(DBusMessageIter *iter, uint16_t *version)
 		return 0;
 	}
 
-	return -ENOENT;
+	/* Terrible hack so Ofono won't fail out HFP connections
+	*  NOTE: This causes PulseAudio to crash, so make sure PulseAudio gets
+	*  restarted. This awful workaround needs to be removed once overlying issue
+	*  is identified and resolved.
+	*/
+	*version = 262; // 262 was the version observed when the HFP flow was working...
+	return 0;
 }
 
 static gboolean has_hfp_ag_uuid(DBusMessageIter *array)
